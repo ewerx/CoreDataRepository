@@ -16,11 +16,26 @@ public protocol UnmanagedModel: Equatable {
     /// Optional since a new instance won't have a record in CoreData.
     var managedRepoUrl: URL? { get set }
     /// Returns a RepositoryManagedModel instance of `self`
-    func asRepoManaged(in context: NSManagedObjectContext) async -> RepoManaged
+    func asRepoManaged(in context: NSManagedObjectContext) -> RepoManaged
 }
 
 public extension UnmanagedModel {
     var isManaged: Bool {
       managedRepoUrl != nil
     }
+  
+  /// Fetch the repo managed object from its url
+  func getRepoManaged(in context: NSManagedObjectContext) async -> Result<RepoManaged, CoreDataRepositoryError> {
+    guard let url = managedRepoUrl else { return .failure(.fetchedObjectFailedToCastToExpectedType) } //TODO: error type
+    do {
+      let id = try context.tryObjectId(from: url)
+      let object = try context.notDeletedObject(for: id)
+      let repoManaged: RepoManaged = try object.asRepoManaged()
+      return .success(repoManaged)
+    } catch let error as CoreDataRepositoryError {
+      return .failure(error)
+    } catch let error as NSError {
+      return .failure(CoreDataRepositoryError.coreData(error))
+    }
+  }
 }
