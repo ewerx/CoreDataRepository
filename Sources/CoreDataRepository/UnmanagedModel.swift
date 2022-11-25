@@ -16,5 +16,11 @@ public protocol UnmanagedModel: Equatable {
     /// Optional since a new instance won't have a record in CoreData.
     var managedRepoUrl: URL? { get set }
     /// Returns a RepositoryManagedModel instance of `self`
-    func asRepoManaged(in context: NSManagedObjectContext) -> RepoManaged
+    func asRepoManaged(in context: NSManagedObjectContext) async -> RepoManaged
+}
+
+public extension UnmanagedModel {
+    var isManaged: Bool {
+      managedRepoUrl != nil
+    }
 }
