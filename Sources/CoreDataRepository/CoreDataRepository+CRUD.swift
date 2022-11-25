@@ -24,12 +24,14 @@ extension CoreDataRepository {
     ///
     public func create<Model: UnmanagedModel>(
         _ item: Model,
-        transactionAuthor: String? = nil
+        transactionAuthor: String? = nil,
+        handleRelationships: ((NSManagedObjectContext) -> Void)? = nil
     ) async -> Result<Model, CoreDataRepositoryError> {
         await context.performInScratchPad(schedule: .enqueued) { [context] scratchPad in
             scratchPad.transactionAuthor = transactionAuthor
             let object = Model.RepoManaged(context: scratchPad)
             object.create(from: item)
+            handleRelationships?(scratchPad)
             try scratchPad.save()
             try context.performAndWait {
                 try context.save()
