@@ -21,21 +21,20 @@ public protocol UnmanagedModel: Equatable {
 
 public extension UnmanagedModel {
     var isManaged: Bool {
-      managedRepoUrl != nil
+        managedRepoUrl != nil
     }
   
-  /// Fetch the repo managed object from its url
-  func getRepoManaged(in context: NSManagedObjectContext) async -> Result<RepoManaged, CoreDataRepositoryError> {
-    guard let url = managedRepoUrl else { return .failure(.fetchedObjectFailedToCastToExpectedType) } //TODO: error type
-    do {
-      let id = try context.tryObjectId(from: url)
-      let object = try context.notDeletedObject(for: id)
-      let repoManaged: RepoManaged = try object.asRepoManaged()
-      return .success(repoManaged)
-    } catch let error as CoreDataRepositoryError {
-      return .failure(error)
-    } catch let error as NSError {
-      return .failure(CoreDataRepositoryError.coreData(error))
+    func getManagedObjectId(in context: NSManagedObjectContext) -> NSManagedObjectID? {
+        guard let url = managedRepoUrl else { return nil }
+        return try? context.tryObjectId(from: url)
     }
-  }
+    
+    /// Fetch the repo managed object from its url
+    func getManagedObject(in context: NSManagedObjectContext) -> RepoManaged? {
+        guard let objectId = getManagedObjectId(in: context),
+              let object = try? context.notDeletedObject(for: objectId) else {
+            return nil
+        }
+        return try? object.asRepoManaged()
+    }
 }
