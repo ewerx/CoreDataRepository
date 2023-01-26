@@ -72,13 +72,15 @@ extension CoreDataRepository {
     public func update<Model: UnmanagedModel>(
         _ url: URL,
         with item: Model,
-        transactionAuthor _: String? = nil
+        transactionAuthor _: String? = nil,
+        handleRelationships: ((NSManagedObjectContext, Model.RepoManaged) -> Void)? = nil
     ) async -> Result<Model, CoreDataRepositoryError> {
         await context.performInScratchPad(schedule: .enqueued) { [context] scratchPad in
             let id = try scratchPad.tryObjectId(from: url)
             let object = try scratchPad.notDeletedObject(for: id)
             let repoManaged: Model.RepoManaged = try object.asRepoManaged()
             repoManaged.update(from: item)
+            handleRelationships?(scratchPad, repoManaged)
             try scratchPad.save()
             try context.performAndWait {
                 try context.save()
