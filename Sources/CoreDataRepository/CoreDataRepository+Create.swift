@@ -13,13 +13,15 @@ extension CoreDataRepository {
     @inlinable
     public func create<Model>(
         _ item: Model,
-        transactionAuthor: String? = nil
+        transactionAuthor: String? = nil,
+        beforeSave: ((NSManagedObjectContext, Model.ManagedModel) throws -> Void)? = nil
     ) async -> Result<Model, CoreDataError> where Model: WritableUnmanagedModel, Model: FetchableUnmanagedModel {
         await context.performInScratchPad(schedule: .enqueued) { [context] scratchPad in
             scratchPad.transactionAuthor = transactionAuthor
             let object = try item.asManagedModel(in: scratchPad)
             let tempObjectId = object.objectID
             try item.updating(managed: object)
+            try beforeSave?(scratchPad, object)
             try scratchPad.save()
             try context.performAndWait {
                 context.transactionAuthor = transactionAuthor

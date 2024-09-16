@@ -57,7 +57,8 @@ extension CoreDataRepository {
     public func update<Model: UnmanagedModel>(
         _ managedIdUrl: URL,
         with item: Model,
-        transactionAuthor: String? = nil
+        transactionAuthor: String? = nil,
+        beforeSave: ((NSManagedObjectContext, Model.ManagedModel) throws -> Void)? = nil
     ) async -> Result<Model, CoreDataError> where Model: FetchableUnmanagedModel, Model: WritableUnmanagedModel {
         await context.performInScratchPad(schedule: .enqueued) { [context] scratchPad in
             scratchPad.transactionAuthor = transactionAuthor
@@ -65,6 +66,7 @@ extension CoreDataRepository {
             let object = try scratchPad.notDeletedObject(for: id)
             let repoManaged: Model.ManagedModel = try object.asManagedModel()
             try item.updating(managed: repoManaged)
+            try beforeSave?(scratchPad, repoManaged)
             try scratchPad.save()
             try context.performAndWait {
                 context.transactionAuthor = transactionAuthor
