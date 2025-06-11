@@ -1,10 +1,8 @@
 // IdentifiableModel_Uuid.swift
 // CoreDataRepository
 //
-//
-// MIT License
-//
-// Copyright © 2024 Andrew Roan
+// This source code is licensed under the MIT License (MIT) found in the
+// LICENSE file in the root directory of this source tree.
 
 import CoreDataRepository
 import Foundation
@@ -103,7 +101,7 @@ extension IdentifiableModel_UuidId: IdentifiedUnmanagedModel {
 
     @inlinable
     package static var unmanagedIdAccessor: (IdentifiableModel_UuidId) -> UUID { \.id }
-    package static let managedIdExpression = NSExpression(forKeyPath: \ManagedModel_UuidId.id)
+    package nonisolated(unsafe) static let managedIdExpression = NSExpression(forKeyPath: \ManagedModel_UuidId.id)
 }
 
 extension IdentifiableModel_UuidId: WritableUnmanagedModel {

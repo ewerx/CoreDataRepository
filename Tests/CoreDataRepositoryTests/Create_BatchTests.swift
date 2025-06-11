@@ -1,10 +1,8 @@
 // Create_BatchTests.swift
 // CoreDataRepository
 //
-//
-// MIT License
-//
-// Copyright © 2024 Andrew Roan
+// This source code is licensed under the MIT License (MIT) found in the
+// LICENSE file in the root directory of this source tree.
 
 import CoreData
 import CoreDataRepository
@@ -433,7 +431,7 @@ final class Create_BatchTests: CoreDataXCTestCase {
             try self.repositoryContext().parent?.save()
             return value
         }
-        try await verify(modelType.init(managed: existingValue))
+        try await verify(mapInContext(existingValue, transform: modelType.init(managed:)))
 
         let result = try await repository()
             .createAtomically(_values)
@@ -516,7 +514,7 @@ final class Create_BatchTests: CoreDataXCTestCase {
             try self.repositoryContext().parent?.save()
             return value
         }
-        try await verify(modelType.init(managed: existingValue))
+        try await verify(mapInContext(existingValue, transform: modelType.init(managed:)))
 
         let result = try await repository()
             .createAtomically(_values)
@@ -599,7 +597,7 @@ final class Create_BatchTests: CoreDataXCTestCase {
             try self.repositoryContext().parent?.save()
             return value
         }
-        try await verify(modelType.init(managed: existingValue))
+        try await verify(mapInContext(existingValue, transform: modelType.init(managed:)))
 
         let result = try await repository()
             .createAtomically(_values)
@@ -682,7 +680,7 @@ final class Create_BatchTests: CoreDataXCTestCase {
             try self.repositoryContext().parent?.save()
             return value
         }
-        try await verify(modelType.init(managed: existingValue))
+        try await verify(mapInContext(existingValue, transform: modelType.init(managed:)))
 
         let result = try await repository()
             .createAtomically(_values)

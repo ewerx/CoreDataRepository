@@ -1,10 +1,8 @@
 // Read_BatchTests.swift
 // CoreDataRepository
 //
-//
-// MIT License
-//
-// Copyright © 2024 Andrew Roan
+// This source code is licensed under the MIT License (MIT) found in the
+// LICENSE file in the root directory of this source tree.
 
 import CoreData
 import CoreDataRepository
@@ -634,7 +632,6 @@ final class Read_BatchTests: CoreDataXCTestCase {
 
     func testReadAtomically_ManagedIdUrl_Success() async throws {
         let modelType = ManagedIdUrlModel_UuidId.self
-        let transactionAuthor: String = #function
         let _values = [
             modelType.seeded(1),
             modelType.seeded(2),

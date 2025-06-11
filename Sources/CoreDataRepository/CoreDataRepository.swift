@@ -1,10 +1,8 @@
 // CoreDataRepository.swift
 // CoreDataRepository
 //
-//
-// MIT License
-//
-// Copyright © 2024 Andrew Roan
+// This source code is licensed under the MIT License (MIT) found in the
+// LICENSE file in the root directory of this source tree.
 
 import CoreData
 import Foundation
@@ -24,7 +22,10 @@ import Foundation
 /// For fetch and aggregate operations, there are additional subscription and throwing subscription options.
 /// Subscriptions return an ``AsyncStream`` of
 /// ``Result``s with strongly typed errors. Throwing subscriptions return an ``AsyncThrowingStream``.
-public final class CoreDataRepository {
+///
+/// All uses of ``context`` are wrapped in `perform` or `performAndWait` blocks so ``CoreDataRepository`` is concurrency
+/// safe.
+public final class CoreDataRepository: @unchecked Sendable {
     /// CoreData context the repository uses. A child or 'scratch' context is usually created from this context for work
     /// to be performed in.
     public let context: NSManagedObjectContext

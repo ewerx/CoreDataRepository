@@ -1,17 +1,15 @@
 // ReadThrowingSubscription.swift
 // CoreDataRepository
 //
-//
-// MIT License
-//
-// Copyright © 2024 Andrew Roan
+// This source code is licensed under the MIT License (MIT) found in the
+// LICENSE file in the root directory of this source tree.
 
 import Combine
 import CoreData
 import Foundation
 
 @usableFromInline
-final class ReadThrowingSubscription<Model: ReadableUnmanagedModel> {
+final class ReadThrowingSubscription<Model: ReadableUnmanagedModel>: @unchecked Sendable {
     private let objectId: NSManagedObjectID
     private let context: NSManagedObjectContext
     private var cancellables: Set<AnyCancellable>

@@ -1,18 +1,17 @@
 // AggregateThrowingSubscription.swift
 // CoreDataRepository
 //
-//
-// MIT License
-//
-// Copyright © 2024 Andrew Roan
+// This source code is licensed under the MIT License (MIT) found in the
+// LICENSE file in the root directory of this source tree.
 
 import CoreData
 import Foundation
 
 /// Subscription provider that sends updates when an aggregate fetch request changes
 @usableFromInline
-final class AggregateThrowingSubscription<Value>: ThrowingSubscription<Value, NSDictionary, NSManagedObject>
-    where Value: Numeric
+final class AggregateThrowingSubscription<Value>: ThrowingSubscription<Value, NSDictionary, NSManagedObject>,
+    @unchecked Sendable
+    where Value: Numeric, Value: Sendable
 {
     @usableFromInline
     override func fetch() {

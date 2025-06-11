@@ -1,10 +1,8 @@
 // ManagedModel_Uuid.swift
 // CoreDataRepository
 //
-//
-// MIT License
-//
-// Copyright © 2024 Andrew Roan
+// This source code is licensed under the MIT License (MIT) found in the
+// LICENSE file in the root directory of this source tree.
 
 import CoreData
 import Foundation
@@ -19,7 +17,7 @@ extension ManagedModel_UuidId {
         entityDescription
     }
 
-    package static let entityDescription: NSEntityDescription = {
+    package nonisolated(unsafe) static let entityDescription: NSEntityDescription = {
         let desc = NSEntityDescription()
         desc.name = "ManagedModel_UuidId"
         desc.managedObjectClassName = NSStringFromClass(ManagedModel_UuidId.self)
